@@ -2,9 +2,13 @@ package com.rishiraj.productservice.service;
 
 import com.rishiraj.productservice.dto.FakeStoreProductDto;
 import com.rishiraj.productservice.model.Product;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -25,13 +29,36 @@ public class FakeStoreProductService implements ProductService{
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        System.out.println("getAllProducts");
-        return List.of();
+    public List<FakeStoreProductDto> getAllProducts() {
+        FakeStoreProductDto[] response = restTemplate.getForObject(
+                "https://fakestoreapi.com/products", FakeStoreProductDto[].class
+        );
+        return Arrays.asList(response);
     }
 
     @Override
-    public Product CreateProduct(Product product) {
+    public void deleteProduct(Long productId) {
+        String url = "https://fakestoreapi.com/products/" + productId;
+        restTemplate.delete(url);
+    }
+
+    @Override
+    public FakeStoreProductDto updateProduct(Long productId, FakeStoreProductDto product) {
+        String url = "https://fakestoreapi.com/products/" + productId;
+
+        ResponseEntity<FakeStoreProductDto> response =
+                restTemplate.exchange(
+                        url,
+                        HttpMethod.PUT,
+                        new HttpEntity<>(product),
+                        FakeStoreProductDto.class
+                );
+
+        return response.getBody();
+    }
+
+    @Override
+    public Product createProduct(Product product) {
         FakeStoreProductDto fs = new FakeStoreProductDto();
         fs.setId(product.getId());
         fs.setDescription(product.getDescription());

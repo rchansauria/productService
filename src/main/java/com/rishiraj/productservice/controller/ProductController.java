@@ -1,5 +1,6 @@
 package com.rishiraj.productservice.controller;
 
+import com.rishiraj.productservice.dto.FakeStoreProductDto;
 import com.rishiraj.productservice.model.Product;
 import com.rishiraj.productservice.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,18 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public void getProducts() {
-        productService.getAllProducts();
+    public List<FakeStoreProductDto> getProducts() {
+        return productService.getAllProducts();
+    }
+    @DeleteMapping("/delete/{id}")
+    public void deleteProduct( @PathVariable Long  id){
+        productService.deleteProduct(id);
+    }
+
+    @PutMapping("/update/{id}")
+    public FakeStoreProductDto updateProduct(@PathVariable Long id, @RequestBody FakeStoreProductDto fakeStoreProductDto) {
+
+    return productService.updateProduct(id, fakeStoreProductDto);
     }
 
 
