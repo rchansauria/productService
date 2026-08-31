@@ -4,6 +4,9 @@ import com.rishiraj.productservice.dto.FakeStoreProductDto;
 import com.rishiraj.productservice.model.Product;
 import com.rishiraj.productservice.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,23 +20,26 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public void createProduct() {
+    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+        return new ResponseEntity<>(productService.createProduct(product), HttpStatus.CREATED);
 
     }
 
     @GetMapping("/products/{id}")
-    public Product getProduct(@PathVariable Long id) {
+    public ResponseEntity<Product> getProduct(@PathVariable Long id) {
         Product currentProduct = productService.getSingleProduct(id);
-        return currentProduct;
+
+        return new ResponseEntity<>(productService.getSingleProduct(id), HttpStatus.OK);
     }
 
     @GetMapping("/products")
-    public List<FakeStoreProductDto> getProducts() {
-        return productService.getAllProducts();
+    public ResponseEntity<List<FakeStoreProductDto>> getProducts() {
+        return new ResponseEntity<>(productService.getAllProducts(), HttpStatus.OK);
     }
     @DeleteMapping("/delete/{id}")
-    public void deleteProduct( @PathVariable Long  id){
+    public ResponseEntity<Void> deleteProduct( @PathVariable Long  id){
         productService.deleteProduct(id);
+       return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/update/{id}")
