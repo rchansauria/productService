@@ -1,6 +1,7 @@
 package com.rishiraj.productservice.service;
 
 import com.rishiraj.productservice.dto.FakeStoreProductDto;
+import com.rishiraj.productservice.exception.ProductNotFoundException;
 import com.rishiraj.productservice.model.Product;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -20,10 +21,13 @@ public class FakeStoreProductService implements ProductService{
         this.restTemplate = restTemplate;
     }
     @Override
-    public Product getSingleProduct(Long productId) {
+    public Product getSingleProduct(Long productId) throws ProductNotFoundException {
         FakeStoreProductDto fakeStoreProductDto = restTemplate.getForObject(
                 "https://fakestoreapi.com/products/" + productId, FakeStoreProductDto.class
         );
+        if(fakeStoreProductDto == null){
+            throw new ProductNotFoundException("Product not found with id " + productId);
+        }
         return fakeStoreProductDto.toProduct();
 
     }
