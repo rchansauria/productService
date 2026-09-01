@@ -1,12 +1,13 @@
 package com.rishiraj.productservice.service;
 
 import com.rishiraj.productservice.dto.FakeStoreProductDto;
+import com.rishiraj.productservice.exception.ProductNotFoundException;
 import com.rishiraj.productservice.model.Product;
 
 import java.util.List;
 
 public interface ProductService {
-    Product getSingleProduct(Long productId);
+    Product getSingleProduct(Long productId)throws ProductNotFoundException;
     List<FakeStoreProductDto> getAllProducts();
     Product createProduct(Product product);
     void deleteProduct(Long productId);

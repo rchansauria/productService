@@ -1,6 +1,8 @@
 package com.rishiraj.productservice.controller;
 
+import com.rishiraj.productservice.dto.ErrorDto;
 import com.rishiraj.productservice.dto.FakeStoreProductDto;
+import com.rishiraj.productservice.exception.ProductNotFoundException;
 import com.rishiraj.productservice.model.Product;
 import com.rishiraj.productservice.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +28,17 @@ public class ProductController {
     }
 
     @GetMapping("/products/{id}")
-    public ResponseEntity<Product> getProduct(@PathVariable Long id) {
+    public ResponseEntity<Product> getProduct(@PathVariable Long id) throws ProductNotFoundException {
         Product currentProduct = productService.getSingleProduct(id);
 
         return new ResponseEntity<>(productService.getSingleProduct(id), HttpStatus.OK);
+    }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<ErrorDto> handleProductNotFoundException(ProductNotFoundException e) {
+        ErrorDto errorDto = new ErrorDto();
+        errorDto.setMessage(e.getMessage());
+        return new ResponseEntity<>(errorDto, HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/products")
