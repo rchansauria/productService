@@ -2,8 +2,10 @@ package com.rishiraj.productservice.controller;
 
 import com.rishiraj.productservice.dto.ErrorDto;
 import com.rishiraj.productservice.dto.FakeStoreProductDto;
+import com.rishiraj.productservice.exception.CategoryNotFound;
 import com.rishiraj.productservice.exception.ProductNotFoundException;
 import com.rishiraj.productservice.model.Product;
+import com.rishiraj.productservice.projections.ProductProjection;
 import com.rishiraj.productservice.service.ProductService;
 import com.rishiraj.productservice.service.SelfProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +44,15 @@ public class ProductController {
         errorDto.setMessage(e.getMessage());
         return new ResponseEntity<>(errorDto, HttpStatus.NOT_FOUND);
     }
+    @ExceptionHandler(CategoryNotFound.class)
+    public ResponseEntity<ErrorDto> handleCategoryNotFoundException(CategoryNotFound e) {
+        ErrorDto errorDto = new ErrorDto();
+        errorDto.setMessage(e.getMessage());
+        return new ResponseEntity<>(errorDto, HttpStatus.NOT_FOUND);
+    }
 
     @GetMapping("/products")
-    public ResponseEntity<List<FakeStoreProductDto>> getProducts() {
+    public ResponseEntity<List<ProductProjection>> getProducts() {
         return new ResponseEntity<>(productService.getAllProducts(), HttpStatus.OK);
     }
     @DeleteMapping("/delete/{id}")
@@ -57,6 +65,11 @@ public class ProductController {
     public FakeStoreProductDto updateProduct(@PathVariable Long id, @RequestBody FakeStoreProductDto fakeStoreProductDto) {
 
     return productService.updateProduct(id, fakeStoreProductDto);
+    }
+
+    @GetMapping("/category/{category}")
+    public ResponseEntity<List<ProductProjection>> getCategoryProducts(@PathVariable String category)throws CategoryNotFound {
+        return  ResponseEntity.ok(productService.getProductByCategory(category));
     }
 
 
