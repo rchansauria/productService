@@ -1,5 +1,6 @@
 package com.rishiraj.productservice.service;
 
+import com.rishiraj.productservice.ProductServiceApplication;
 import com.rishiraj.productservice.dto.FakeStoreProductDto;
 import com.rishiraj.productservice.exception.CategoryNotFound;
 import com.rishiraj.productservice.exception.ProductNotFoundException;
@@ -13,7 +14,7 @@ public interface ProductService {
     List<ProductProjection> getAllProducts();
     Product createProduct(Product product);
     void deleteProduct(Long productId);
-    FakeStoreProductDto updateProduct(Long productId, FakeStoreProductDto product);
-    List<ProductProjection> getProductByCategory(String category)throws CategoryNotFound;
+    Product updateProduct(Long productId, Product product)throws ProductNotFoundException;
+    List<Product> getProductByCategory(String category)throws CategoryNotFound;
 
 }
