@@ -38,18 +38,6 @@ public class ProductController {
         return new ResponseEntity<>(productService.getSingleProduct(id), HttpStatus.OK);
     }
 
-    @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<ErrorDto> handleProductNotFoundException(ProductNotFoundException e) {
-        ErrorDto errorDto = new ErrorDto();
-        errorDto.setMessage(e.getMessage());
-        return new ResponseEntity<>(errorDto, HttpStatus.NOT_FOUND);
-    }
-    @ExceptionHandler(CategoryNotFound.class)
-    public ResponseEntity<ErrorDto> handleCategoryNotFoundException(CategoryNotFound e) {
-        ErrorDto errorDto = new ErrorDto();
-        errorDto.setMessage(e.getMessage());
-        return new ResponseEntity<>(errorDto, HttpStatus.NOT_FOUND);
-    }
 
     @GetMapping("/products")
     public ResponseEntity<List<ProductProjection>> getProducts() {
@@ -62,13 +50,13 @@ public class ProductController {
     }
 
     @PutMapping("/update/{id}")
-    public FakeStoreProductDto updateProduct(@PathVariable Long id, @RequestBody FakeStoreProductDto fakeStoreProductDto) {
+    public Product updateProduct(@PathVariable Long id, @RequestBody Product product)throws ProductNotFoundException {
 
-    return productService.updateProduct(id, fakeStoreProductDto);
+    return productService.updateProduct(id, product);
     }
 
     @GetMapping("/category/{category}")
-    public ResponseEntity<List<ProductProjection>> getCategoryProducts(@PathVariable String category)throws CategoryNotFound {
+    public ResponseEntity<List<Product>> getCategoryProducts(@PathVariable String category)throws CategoryNotFound {
         return  ResponseEntity.ok(productService.getProductByCategory(category));
     }
 

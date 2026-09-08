@@ -10,6 +10,7 @@ import com.rishiraj.productservice.repository.CategoryRepo;
 import com.rishiraj.productservice.repository.ProductRepo;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,20 +66,53 @@ public class SelfProductService implements ProductService{
     }
 
     @Override
-    public FakeStoreProductDto updateProduct(Long productId, FakeStoreProductDto product) {
-        return null;
+    public Product updateProduct(Long productId, Product product) throws ProductNotFoundException {
+            Optional<Product> p = productRepo.findById(productId);
+            if(!p.isPresent()){
+                throw  new ProductNotFoundException("Product not found");
+            }
+            Product updatedProduct = p.get();
+            if(product.getTitle()!=null){
+                updatedProduct.setTitle(product.getTitle());
+            }
+            if(product.getDescription()!=null){
+                updatedProduct.setDescription(product.getDescription());
+            }
+            if(product.getCategory()!=null){
+                Category category =
+                        categoryRepo.findByTitle(product.getCategory().getTitle());
+
+                if (category == null) {
+                    Category newCategory = new Category();
+                    newCategory.setTitle(product.getCategory().getTitle());
+
+                    category = categoryRepo.save(newCategory);
+                }
+
+                updatedProduct.setCategory(category);
+            }
+            if(product.getPrice()!=0.0){
+                updatedProduct.setPrice(product.getPrice());
+            }
+            if(product.getImageUrl()!=null){
+                updatedProduct.setImageUrl(product.getImageUrl());
+            }
+            return productRepo.save(updatedProduct);
+
     }
 
+
+
     @Override
-    public List<ProductProjection> getProductByCategory(String category) throws CategoryNotFound {
+    public List<Product> getProductByCategory(String category) throws CategoryNotFound {
         Category cat = categoryRepo.findByTitle(category);
         if(cat==null){
             throw new CategoryNotFound("Category not found!");
         }
         else{
-//            return productRepo.findByCategoryId(cat.getId());
+            return productRepo.findByCategoryId(cat.getId());
 //            return productRepo.findByCategoryIdNative(cat.getId());
-            return productRepo.getProductByCategoryIdProjection(cat.getId());
+//            return productRepo.getProductByCategoryIdProjection(cat.getId());
         }
 
     }
