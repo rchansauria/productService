@@ -3,6 +3,8 @@ package com.rishiraj.productservice.repository;
 import com.rishiraj.productservice.model.Category;
 import com.rishiraj.productservice.model.Product;
 import com.rishiraj.productservice.projections.ProductProjection;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,8 +15,8 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
             Product findByTitle(String Title);
 
 
-            @Query(value = "SELECT id, title, price FROM product", nativeQuery = true)
-            List<ProductProjection> findAllProducts();
+    @Query(value = "SELECT * FROM product", nativeQuery = true)
+    Page<Product> findAllProducts(Pageable pageable);
 
            //Implement HQL:
             @Query("select  p from Product p where p.category.id= :categoryId")

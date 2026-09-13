@@ -8,6 +8,9 @@ import com.rishiraj.productservice.model.Product;
 import com.rishiraj.productservice.projections.ProductProjection;
 import com.rishiraj.productservice.repository.CategoryRepo;
 import com.rishiraj.productservice.repository.ProductRepo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
@@ -34,8 +37,12 @@ public class SelfProductService implements ProductService{
     }
 
     @Override
-    public List<ProductProjection> getAllProducts() {
-        return productRepo.findAllProducts();
+    public Page<Product> getAllProducts(int pageNo, int pageSize, String sortBy, String direction) throws ProductNotFoundException {
+
+        Sort sort = direction.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+        return productRepo.findAllProducts(PageRequest.of(pageNo,pageSize,sort));
     }
 
 //    @Override
