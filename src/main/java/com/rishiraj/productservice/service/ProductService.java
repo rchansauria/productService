@@ -16,7 +16,7 @@ public interface ProductService {
     Page<Product> getAllProducts(int pageSize, int pageNo, String sortBy, String dir)throws ProductNotFoundException;
     Product createProduct(Product product);
     void deleteProduct(Long productId);
-    Product updateProduct(Long productId, Product product)throws ProductNotFoundException;
+//    Product updateProduct(Long productId, Product product)throws ProductNotFoundException;
     List<Product> getProductByCategory(String category)throws CategoryNotFound;
 
 }
