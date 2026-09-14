@@ -26,7 +26,8 @@ public class ProductController {
 
     private ProductService productService;
     private PaymentClientService paymentClientService;
-    public ProductController(@Qualifier("SelfProductService") ProductService productService, PaymentClientService paymentClientService) {
+
+    public ProductController(@Qualifier("FakeProductStoreService") ProductService productService, PaymentClientService paymentClientService) {
         this.productService = productService;
         this.paymentClientService = paymentClientService;
     }
@@ -58,11 +59,11 @@ public class ProductController {
        return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/update/{id}")
-    public Product updateProduct(@PathVariable Long id, @RequestBody Product product)throws ProductNotFoundException {
-
-    return productService.updateProduct(id, product);
-    }
+//    @PutMapping("/update/{id}")
+//    public Product updateProduct(@PathVariable Long id, @RequestBody Product product)throws ProductNotFoundException {
+//
+//    return productService.updateProduct(id, product);
+//    }
 
     @GetMapping("/category/{category}")
     public ResponseEntity<List<Product>> getCategoryProducts(@PathVariable String category)throws CategoryNotFound {
